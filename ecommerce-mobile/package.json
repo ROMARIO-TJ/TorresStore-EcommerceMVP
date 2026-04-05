@@ -1,25 +1,29 @@
 {
   "name": "ecommerce-mobile",
   "version": "1.0.0",
+  "homepage": "https://ROMARIO-TJ.github.io/TorresStore-EcommerceMVP/",
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "deploy": "npx expo export -p web && node -e \"require('fs').writeFileSync('dist/.nojekyll', '')\" && gh-pages -d dist -t"
   },
   "dependencies": {
-    "@expo/metro-runtime": "~6.1.2",
-    "expo": "~54.0.33",
-    "expo-status-bar": "~3.0.9",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-native": "0.81.5",
-    "react-native-web": "^0.21.0"
+    "@expo/metro-runtime": "~4.0.0",
+    "expo": "~52.0.32",
+    "expo-status-bar": "~2.0.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-native": "0.76.7",
+    "react-native-web": "~0.19.13"
   },
   "devDependencies": {
-    "@types/react": "~19.1.0",
-    "typescript": "~5.9.2"
+    "@babel/core": "^7.25.2",
+    "@types/react": "~18.3.12",
+    "typescript": "^5.3.3",
+    "gh-pages": "^6.3.0"
   },
   "private": true
 }
