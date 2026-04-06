@@ -274,6 +274,8 @@ const styles = StyleSheet.create({
   detailsContentWrapper: { padding: 24, backgroundColor: '#FFF', borderTopLeftRadius: 35, borderTopRightRadius: 35, marginTop: -35, minHeight: 400 },
   detailsTitle: { fontSize: 26, fontWeight: '900', color: '#1A1A1A' },
   detailsPrice: { fontSize: 26, fontWeight: '800', color: '#007AFF' },
+  detailsSubtitle: { fontSize: 18, fontWeight: '700', color: '#1A1A1A', marginBottom: 10, marginTop: 20 },
+  detailsDesc: { fontSize: 16, lineHeight: 24, color: '#666' },
   bottomBar: { padding: 20, backgroundColor: '#FFF', borderTopWidth: 1, borderColor: '#EFEFEF' },
   addToCartSpecialButton: { backgroundColor: '#1A1A1A', width: '100%', paddingVertical: 18, borderRadius: 16, alignItems: 'center' },
   addToCartSpecialText: { color: '#FFF', fontSize: 18, fontWeight: '700' }
