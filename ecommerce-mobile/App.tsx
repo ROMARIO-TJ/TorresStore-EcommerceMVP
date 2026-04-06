@@ -56,9 +56,9 @@ export default function App() {
   const cartTotal = cart.reduce((sum, item) => sum + item.priceValue, 0);
 
   const renderProduct = ({ item }: { item: any }) => (
-    <TouchableOpacity 
-      style={styles.card} 
-      activeOpacity={0.9} 
+    <TouchableOpacity
+      style={styles.card}
+      activeOpacity={0.9}
       onPress={() => setSelectedProduct(item)}
       delayPressIn={100}
     >
@@ -80,24 +80,24 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Torres<Text style={{color: '#007AFF'}}>Store</Text></Text>
+        <Text style={styles.headerTitle}>Torres<Text style={{ color: '#007AFF' }}>Store</Text></Text>
         <TouchableOpacity style={styles.cartIcon} onPress={() => setIsCartVisible(true)}>
           <Text style={{ fontSize: 20 }}>🛒</Text>
           {cart.length > 0 && <View style={styles.cartBadge}><Text style={styles.cartBadgeText}>{cart.length}</Text></View>}
         </TouchableOpacity>
       </View>
-      
-      <ScrollView 
-        ref={scrollViewRef} 
-        showsVerticalScrollIndicator={false} 
+
+      <ScrollView
+        ref={scrollViewRef}
+        showsVerticalScrollIndicator={false}
         // @ts-ignore - touchAction is web-only
         style={{ flex: 1, touchAction: 'auto' }}
         contentContainerStyle={{ flexGrow: 1 }}
       >
         <View style={styles.banner}>
           <Text style={styles.bannerTitle}>Colección{'\n'}Premium 2026</Text>
-          <TouchableOpacity 
-            style={styles.bannerButton} 
+          <TouchableOpacity
+            style={styles.bannerButton}
             onPress={() => scrollViewRef.current?.scrollTo({ y: 350, animated: true })}
           >
             <Text style={styles.bannerButtonText}>Ver Tienda</Text>
@@ -160,14 +160,14 @@ export default function App() {
   const CartContent = (
     <View style={{ flex: 1, backgroundColor: '#F8F9FB' }}>
       <SafeAreaView style={{ flex: 1 }}>
-        <View style={{...styles.header, backgroundColor: '#FFF'}}>
+        <View style={{ ...styles.header, backgroundColor: '#FFF' }}>
           <Text style={styles.headerTitle}>Tu Carrito</Text>
           <TouchableOpacity onPress={() => setIsCartVisible(false)}><Text style={{ fontSize: 18, color: '#FF3B30', fontWeight: 'bold' }}>✕</Text></TouchableOpacity>
         </View>
         <ScrollView style={{ flex: 1, padding: 20 }}>
           {cart.map((item) => (
             <View key={item.cartId} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 15, borderRadius: 15, marginBottom: 15, alignItems: 'center' }}>
-              <Image source={{uri: item.image}} style={{ width: 60, height: 60, borderRadius: 10 }} />
+              <Image source={{ uri: item.image }} style={{ width: 60, height: 60, borderRadius: 10 }} />
               <View style={{ flex: 1, marginLeft: 15 }}>
                 <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
                 <Text style={{ color: '#007AFF' }}>{item.price}</Text>
@@ -192,6 +192,18 @@ export default function App() {
     if (Platform.OS === 'web' && isMobileDevice) {
       document.body.style.overflow = 'auto';
       document.documentElement.style.overflow = 'auto';
+      
+      // Inyectar CSS para anular la clase de React Native Web que bloquea el scroll
+      const guestStyle = document.createElement('style');
+      guestStyle.innerHTML = `
+        .r-touchAction-19z077z { 
+          touch-action: auto !important; 
+        }
+        * {
+          -webkit-overflow-scrolling: touch;
+        }
+      `;
+      document.head.appendChild(guestStyle);
     }
   }, []);
 
@@ -215,7 +227,7 @@ export default function App() {
     return (
       // @ts-ignore - touchAction is web-only
       <View style={{ flex: 1, backgroundColor: '#ECEFF1', alignItems: 'center', justifyContent: 'center', padding: 10, touchAction: 'auto' }}>
-        <View style={{ 
+        <View style={{
           width: '100%', maxWidth: 400, height: '92vh', maxHeight: 850,
           backgroundColor: '#FFF', borderRadius: 45, overflow: 'hidden', borderWidth: 10, borderColor: '#1A1A1A', boxShadow: '0px 20px 40px rgba(0,0,0,0.1)', position: 'relative'
         }}>
