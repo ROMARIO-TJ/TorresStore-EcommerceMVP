@@ -106,7 +106,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Torres<Text style={{ color: '#007AFF' }}>Store</Text></Text>
+        <Text style={styles.headerTitle}>Romario<Text style={{ color: '#007AFF' }}>Store</Text></Text>
         <TouchableOpacity style={styles.cartIcon} onPress={() => setIsCartVisible(true)}>
           <Text style={{ fontSize: 20 }}>🛒</Text>
           {cart.length > 0 && <View style={styles.cartBadge}><Text style={styles.cartBadgeText}>{cart.length}</Text></View>}
@@ -210,17 +210,17 @@ export default function App() {
     // On desktop: show decorative phone silhouette
     return (
       <View style={{ flex: 1, backgroundColor: '#EFF2F5', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-        <View 
+        <View
           // @ts-ignore - vh is web-only
           style={{
-          width: '100%', maxWidth: 330, height: '90vh', maxHeight: 680,
-          backgroundColor: '#FFF', borderRadius: 45, overflow: 'hidden', borderWidth: 8, borderColor: '#0F0F0F', 
-          boxShadow: '0px 25px 50px rgba(0,0,0,0.12)', position: 'relative'
-        }}>
+            width: '100%', maxWidth: 330, height: '90vh', maxHeight: 680,
+            backgroundColor: '#FFF', borderRadius: 45, overflow: 'hidden', borderWidth: 8, borderColor: '#0F0F0F',
+            boxShadow: '0px 25px 50px rgba(0,0,0,0.12)', position: 'relative'
+          }}>
           {/* Dynamic Island style notch - más pequeña */}
-          <View style={{ 
-            position: 'absolute', top: 8, left: '50%', transform: [{ translateX: -45 }], 
-            width: 90, height: 20, backgroundColor: '#0F0F0F', borderRadius: 20, zIndex: 100 
+          <View style={{
+            position: 'absolute', top: 8, left: '50%', transform: [{ translateX: -45 }],
+            width: 90, height: 20, backgroundColor: '#0F0F0F', borderRadius: 20, zIndex: 100
           }} />
           {activeContent}
         </View>
