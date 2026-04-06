@@ -76,6 +76,32 @@ export default function App() {
     </TouchableOpacity>
   );
 
+  const renderHomeHeader = () => (
+    <>
+      <View style={styles.banner}>
+        <Text style={styles.bannerTitle}>Colección{'\n'}Premium 2026</Text>
+        <TouchableOpacity
+          style={styles.bannerButton}
+          onPress={() => scrollViewRef.current?.scrollTo({ y: 350, animated: true })}
+        >
+          <Text style={styles.bannerButtonText}>Ver Tienda</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Tendencias Globales</Text>
+        <TouchableOpacity onPress={() => {
+          if (Platform.OS === 'web') alert("Próximamente nuevas colecciones");
+          else Alert.alert("Próximamente", "Estamos preparando nuevas colecciones para ti.");
+        }}>
+          <Text style={styles.sectionSubtitle}>Ver más</Text>
+        </TouchableOpacity>
+      </View>
+
+      {loading && <ActivityIndicator size="large" color="#007AFF" style={{ marginVertical: 40 }} />}
+    </>
+  );
+
   const HomeContent = (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
@@ -87,46 +113,16 @@ export default function App() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        ref={scrollViewRef}
+      <FlatList
+        ref={scrollViewRef as any}
+        data={loading ? [] : productsAPI}
+        renderItem={renderProduct}
+        keyExtractor={item => item.id}
+        ListHeaderComponent={renderHomeHeader}
+        ListFooterComponent={<View style={{ height: 40 }} />}
         showsVerticalScrollIndicator={false}
-        // @ts-ignore - touchAction is web-only
-        style={{ flex: 1, touchAction: 'auto' }}
-        contentContainerStyle={{ flexGrow: 1 }}
-      >
-        <View style={styles.banner}>
-          <Text style={styles.bannerTitle}>Colección{'\n'}Premium 2026</Text>
-          <TouchableOpacity
-            style={styles.bannerButton}
-            onPress={() => scrollViewRef.current?.scrollTo({ y: 350, animated: true })}
-          >
-            <Text style={styles.bannerButtonText}>Ver Tienda</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Tendencias Globales</Text>
-          <TouchableOpacity onPress={() => {
-            if (Platform.OS === 'web') alert("Próximamente nuevas colecciones");
-            else Alert.alert("Próximamente", "Estamos preparando nuevas colecciones para ti.");
-          }}>
-            <Text style={styles.sectionSubtitle}>Ver más</Text>
-          </TouchableOpacity>
-        </View>
-
-        {loading ? (
-          <ActivityIndicator size="large" color="#007AFF" style={{ marginVertical: 40 }} />
-        ) : (
-          <FlatList
-            data={productsAPI}
-            renderItem={renderProduct}
-            keyExtractor={item => item.id}
-            scrollEnabled={false}
-            contentContainerStyle={styles.listContainer}
-          />
-        )}
-        <View style={{ height: 40 }} />
-      </ScrollView>
+        contentContainerStyle={styles.listContainer}
+      />
     </SafeAreaView>
   );
 
@@ -192,18 +188,6 @@ export default function App() {
     if (Platform.OS === 'web' && isMobileDevice) {
       document.body.style.overflow = 'auto';
       document.documentElement.style.overflow = 'auto';
-      
-      // Inyectar CSS para anular la clase de React Native Web que bloquea el scroll
-      const guestStyle = document.createElement('style');
-      guestStyle.innerHTML = `
-        .r-touchAction-19z077z { 
-          touch-action: auto !important; 
-        }
-        * {
-          -webkit-overflow-scrolling: touch;
-        }
-      `;
-      document.head.appendChild(guestStyle);
     }
   }, []);
 
@@ -225,13 +209,19 @@ export default function App() {
 
     // On desktop: show decorative phone silhouette
     return (
-      // @ts-ignore - touchAction is web-only
-      <View style={{ flex: 1, backgroundColor: '#ECEFF1', alignItems: 'center', justifyContent: 'center', padding: 10, touchAction: 'auto' }}>
-        <View style={{
-          width: '100%', maxWidth: 400, height: '92vh', maxHeight: 850,
-          backgroundColor: '#FFF', borderRadius: 45, overflow: 'hidden', borderWidth: 10, borderColor: '#1A1A1A', boxShadow: '0px 20px 40px rgba(0,0,0,0.1)', position: 'relative'
+      <View style={{ flex: 1, backgroundColor: '#EFF2F5', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+        <View 
+          // @ts-ignore - vh is web-only
+          style={{
+          width: '100%', maxWidth: 330, height: '90vh', maxHeight: 680,
+          backgroundColor: '#FFF', borderRadius: 45, overflow: 'hidden', borderWidth: 8, borderColor: '#0F0F0F', 
+          boxShadow: '0px 25px 50px rgba(0,0,0,0.12)', position: 'relative'
         }}>
-          <View style={{ position: 'absolute', top: 5, left: '50%', transform: [{ translateX: -60 }], width: 120, height: 25, backgroundColor: '#1A1A1A', borderRadius: 20, zIndex: 100 }} />
+          {/* Dynamic Island style notch - más pequeña */}
+          <View style={{ 
+            position: 'absolute', top: 8, left: '50%', transform: [{ translateX: -45 }], 
+            width: 90, height: 20, backgroundColor: '#0F0F0F', borderRadius: 20, zIndex: 100 
+          }} />
           {activeContent}
         </View>
       </View>
@@ -244,16 +234,16 @@ export default function App() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F8F9FB' },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 15 },
-  headerTitle: { fontSize: 24, fontWeight: '800', color: '#1A1A1A' },
-  cartIcon: { padding: 8, backgroundColor: '#FFF', borderRadius: 50, elevation: 2, position: 'relative' },
-  cartBadge: { position: 'absolute', top: -5, right: -5, backgroundColor: '#FF3B30', borderRadius: 10, width: 20, height: 20, justifyContent: 'center', alignItems: 'center' },
-  cartBadgeText: { color: '#FFF', fontSize: 10, fontWeight: 'bold' },
-  banner: { margin: 20, backgroundColor: '#1A1A1A', borderRadius: 24, padding: 30, minHeight: 180, justifyContent: 'center' },
-  bannerTitle: { color: '#FFF', fontSize: 28, fontWeight: '800', marginBottom: 15 },
-  bannerButton: { backgroundColor: '#007AFF', alignSelf: 'flex-start', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 100 },
-  bannerButtonText: { color: '#FFF', fontWeight: '700', fontSize: 14 },
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingHorizontal: 20, marginBottom: 15 },
-  sectionTitle: { fontSize: 20, fontWeight: '700', color: '#1A1A1A' },
+  headerTitle: { fontSize: 18, fontWeight: '800', color: '#1A1A1A' },
+  cartIcon: { padding: 6, backgroundColor: '#FFF', borderRadius: 50, elevation: 2, position: 'relative' },
+  cartBadge: { position: 'absolute', top: -5, right: -5, backgroundColor: '#FF3B30', borderRadius: 10, width: 18, height: 18, justifyContent: 'center', alignItems: 'center' },
+  cartBadgeText: { color: '#FFF', fontSize: 9, fontWeight: 'bold' },
+  banner: { marginHorizontal: 15, marginVertical: 10, backgroundColor: '#1A1A1A', borderRadius: 20, padding: 20, minHeight: 140, justifyContent: 'center' },
+  bannerTitle: { color: '#FFF', fontSize: 20, fontWeight: '800', marginBottom: 10 },
+  bannerButton: { backgroundColor: '#007AFF', alignSelf: 'flex-start', paddingHorizontal: 15, paddingVertical: 6, borderRadius: 100 },
+  bannerButtonText: { color: '#FFF', fontWeight: '700', fontSize: 11 },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingHorizontal: 15, marginBottom: 10 },
+  sectionTitle: { fontSize: 16, fontWeight: '700', color: '#1A1A1A' },
   sectionSubtitle: { fontSize: 14, color: '#007AFF', fontWeight: '600' },
   listContainer: { paddingHorizontal: 10 },
   card: {
