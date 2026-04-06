@@ -56,7 +56,12 @@ export default function App() {
   const cartTotal = cart.reduce((sum, item) => sum + item.priceValue, 0);
 
   const renderProduct = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.card} activeOpacity={0.9} onPress={() => setSelectedProduct(item)}>
+    <TouchableOpacity 
+      style={styles.card} 
+      activeOpacity={0.9} 
+      onPress={() => setSelectedProduct(item)}
+      delayPressIn={100}
+    >
       <View style={styles.imageContainer}>
         <Image source={{ uri: item.image }} style={styles.image} />
         {item.tag ? <View style={styles.badge}><Text style={styles.badgeText}>{item.tag}</Text></View> : null}
@@ -64,7 +69,7 @@ export default function App() {
       <View style={styles.infoContainer}>
         <Text style={styles.productName}>{item.name}</Text>
         <Text style={styles.productPrice}>{item.price}</Text>
-        <TouchableOpacity style={styles.addButton} onPress={() => addToCart(item)}>
+        <TouchableOpacity style={styles.addButton} onPress={() => addToCart(item)} delayPressIn={100}>
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
       </View>
@@ -82,7 +87,13 @@ export default function App() {
         </TouchableOpacity>
       </View>
       
-      <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+      <ScrollView 
+        ref={scrollViewRef} 
+        showsVerticalScrollIndicator={false} 
+        // @ts-ignore - touchAction is web-only
+        style={{ flex: 1, touchAction: 'auto' }}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
         <View style={styles.banner}>
           <Text style={styles.bannerTitle}>Colección{'\n'}Premium 2026</Text>
           <TouchableOpacity 
@@ -173,19 +184,28 @@ export default function App() {
     </View>
   );
 
+  // Check if we are on a mobile device
+  const isMobileDevice = typeof window !== 'undefined' && /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  // Force scroll on mobile browsers
+  useEffect(() => {
+    if (Platform.OS === 'web' && isMobileDevice) {
+      document.body.style.overflow = 'auto';
+      document.documentElement.style.overflow = 'auto';
+    }
+  }, []);
+
   let activeContent;
   if (isCartVisible) activeContent = CartContent;
   else if (selectedProduct) activeContent = DetailsContent;
   else activeContent = HomeContent;
 
   if (Platform.OS === 'web') {
-    // Detect if the user is on a real mobile device
-    const isMobileDevice = typeof window !== 'undefined' && /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    // On real mobile: show content full-screen (no phone frame)
+    // On real mobile: show content full-screen (with explicit touch scroll support)
     if (isMobileDevice) {
       return (
-        <View style={{ flex: 1, backgroundColor: '#F8F9FB' }}>
+        // @ts-ignore - touchAction is web-only
+        <View style={{ flex: 1, backgroundColor: '#F8F9FB', minHeight: '100vh', width: '100%', touchAction: 'auto' }}>
           {activeContent}
         </View>
       );
@@ -193,7 +213,8 @@ export default function App() {
 
     // On desktop: show decorative phone silhouette
     return (
-      <View style={{ flex: 1, backgroundColor: '#ECEFF1', alignItems: 'center', justifyContent: 'center', padding: 10 }}>
+      // @ts-ignore - touchAction is web-only
+      <View style={{ flex: 1, backgroundColor: '#ECEFF1', alignItems: 'center', justifyContent: 'center', padding: 10, touchAction: 'auto' }}>
         <View style={{ 
           width: '100%', maxWidth: 400, height: '92vh', maxHeight: 850,
           backgroundColor: '#FFF', borderRadius: 45, overflow: 'hidden', borderWidth: 10, borderColor: '#1A1A1A', boxShadow: '0px 20px 40px rgba(0,0,0,0.1)', position: 'relative'
